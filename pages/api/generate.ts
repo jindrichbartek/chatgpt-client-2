@@ -3,13 +3,9 @@ import { Configuration, OpenAIApi } from "openai";
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+ apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
-
-interface CompletionData {
-  choices: { text: string }[];
-}
 
 async function generate(req: NextApiRequest, res: NextApiResponse) {
   if (!configuration.apiKey) {
@@ -32,13 +28,31 @@ async function generate(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    const completion = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: prompt,
-      temperature: 0,
+    const completion: any  = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a helpful assistant.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      temperature: 0
     });
-    res.status(200).json({ result: (completion.data as CompletionData).choices[0].text });
-    
+
+    if (completion?.data?.choices?.length ?? 0 > 0) { 
+      res.status(200).json({ result: completion.data.choices[0].message.content }); 
+    } else {
+      res.status(500).json({
+        error: {
+          message: 'An error occurred during your request.',
+        },
+      });
+    }
+
   } catch (error: any) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
