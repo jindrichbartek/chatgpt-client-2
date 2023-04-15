@@ -28,15 +28,12 @@ const ChatGPTClient: React.FC = () => {
       if (response.result) {
         chatGPTResponse = response.result;
       } else {
-        // todo report incident to betterstack
         throw new Error('No response from ChatGPT');
       }
 
-      console.log('chatGPTResponse', chatGPTResponse);
       setConversation([...conversation, { type: 'user', text: userInput }, { type: 'chatgpt', text: chatGPTResponse }]);
       setUserInput('');
     } catch (err) {
-      // todo report incident to betterstack
       console.error(err);
     }
     
