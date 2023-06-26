@@ -1,6 +1,6 @@
 // pages/index.tsx
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect, useRef } from 'react';
 
 type MessageType = 'user' | 'chatgpt';
 
@@ -12,6 +12,13 @@ interface Message {
 const ChatGPTClient: React.FC = () => {
   const [userInput, setUserInput] = useState<string>('');
   const [conversation, setConversation] = useState<Message[]>([]);
+  const chatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [conversation]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -52,7 +59,7 @@ const ChatGPTClient: React.FC = () => {
         <h1 className='px-4'>Chat GPT</h1>
       </header>
           <main className='relative flex flex-1 min-h-screen h-full w-full'>
-            <section id='section1' className='flex flex-col w-full items-center justify-start
+            <section ref={chatRef}  id='chat' className='flex flex-col w-full items-center justify-start
               max-h-85vh flex-basis-20 overflow-auto'>
               { conversation.map((message, index) => (
                 <article key={ index } className={ `text-left md:w-1/2 w-full p-2.5 rounded mb-2.5 ${getMessageClass(message)}` }>
@@ -60,7 +67,7 @@ const ChatGPTClient: React.FC = () => {
                 </article>
               )) }
             </section>
-            <section id='section2' className='absolute bottom-4vh left-0 w-full flex justify-center'>
+            <section id='form' className='absolute bottom-4vh left-0 w-full flex justify-center'>
               <form className='flex items-center justify-center w-full' onSubmit={ handleSubmit }>
                 <textarea
                   className='border rounded-md shadow-md md:w-3/4 w-full p-2 ml-4'
