@@ -40,8 +40,8 @@ const ChatGPTClient: React.FC = () => {
     
   };
 
-  const messageType = (message: any) => {
-    return message.type === 'user' ? 'user-message' : 'chatgpt-message';
+  const getMessageClass = (message: any) => {
+    return message.type === 'user' ? 'bg-gray-200' : 'bg-gray-100';
   }
 
   return (
@@ -53,7 +53,7 @@ const ChatGPTClient: React.FC = () => {
             <section id='section1' className='flex flex-col w-full items-center justify-start
               max-h-85vh flex-basis-20 overflow-auto'>
               { conversation.map((message, index) => (
-                <article key={ index } className={ `text-left md:w-1/2 w-full ${messageType(message)}` }>
+                <article key={ index } className={ `text-left md:w-1/2 w-full p-2.5 rounded mb-2.5 ${getMessageClass(message)}` }>
                   { message.text }
                 </article>
               )) }
