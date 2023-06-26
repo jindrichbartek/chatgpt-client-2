@@ -41,7 +41,7 @@ const ChatGPTClient: React.FC = () => {
   };
 
   const messageType = (message: any) => {
-    return message.type === 'user' ? 'user-message' : 'chatgpt-message'
+    return message.type === 'user' ? 'user-message' : 'chatgpt-message';
   }
 
   return (

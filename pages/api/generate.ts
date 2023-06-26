@@ -54,7 +54,6 @@ async function generate(req: NextApiRequest, res: NextApiResponse) {
     }
 
   } catch (error: any) {
-    // Consider adjusting the error handling logic for your use case
     if (error.response) {
       console.error(error.response.status, error.response.data);
       res.status(error.response.status).json(error.response.data);
