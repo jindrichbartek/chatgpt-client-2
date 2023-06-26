@@ -15,14 +15,17 @@ const ChatGPTClient: React.FC = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    setConversation([...conversation, { type: 'user', text: userInput }]);
+    const userMessage = userInput;
+    setUserInput('');
+    setConversation(prev => [...prev, { type: 'user', text: userMessage }]);
+
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ prompt: userInput })
+        body: JSON.stringify({ prompt: userMessage })
       });
 
       const gptData = await response.json();
@@ -32,8 +35,7 @@ const ChatGPTClient: React.FC = () => {
       if (!gptData) {
         throw new Error('No response from ChatGPT');
       }
-      setConversation([...conversation, { type: 'user', text: userInput }, { type: 'chatgpt', text: gptData.result }]);
-      setUserInput('');
+      setConversation(prev => [...prev, { type: 'chatgpt', text: gptData.result }]);
     } catch (err) {
       console.error(err);
     }
