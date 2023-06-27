@@ -1,6 +1,6 @@
 // pages/index.tsx
 
-import { useState, FormEvent, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FormEvent, KeyboardEvent } from 'react';
 
 type MessageType = 'user' | 'chatgpt';
 
@@ -49,6 +49,13 @@ const ChatGPTClient: React.FC = () => {
     
   };
 
+  function handleKeyDown (e: KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === 'Enter' && e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+    }
+  }
+
   const getMessageClass = (message: any) => {
     return message.type === 'user' ? 'bg-gray-200' : 'bg-gray-100';
   }
@@ -73,6 +80,7 @@ const ChatGPTClient: React.FC = () => {
                   className='border rounded-md shadow-md md:w-3/4 w-full p-2 ml-4'
                   value={ userInput }
                   onChange={(e) => setUserInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="Type your prompt."
                 />
                 <button
